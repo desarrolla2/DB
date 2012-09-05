@@ -89,7 +89,7 @@ class MySQL implements AdapterInterface
         $items = array();
         $result = $this->query($query);
         if ($result) {
-            while ($item = mysql_fetch_array($result)) {
+            while ($item = mysql_fetch_array($result, MYSQL_ASSOC)) {
                 array_push($items, $item);
             }
             return $items;
