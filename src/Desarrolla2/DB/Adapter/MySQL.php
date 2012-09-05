@@ -63,9 +63,9 @@ class MySQL implements AdapterInterface
      */
     public function connect()
     {
-        $this->con = mysql_connect($this->options['host'], $this->options['username'], $this->options['password']);
+        $this->con = mysql_connect($this->options['hostname'], $this->options['username'], $this->options['userpass']);
         if ($this->con) {
-            $select_db = $this->selectaDatabase($this->options['database']);
+            $select_db = $this->selectDatabase($this->options['database']);
         }
         if (!$this->con || !$select_db) {
             throw new ConnectionException(mysql_error());

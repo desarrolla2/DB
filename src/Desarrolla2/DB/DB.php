@@ -74,8 +74,7 @@ class DB implements DBInterface
     protected function checkOptions()
     {
         foreach ($this->validOptions as $required) {
-            if (!in_array($required, $this->options)) {
-                var_dump($this->options);
+            if (!array_key_exists($required, $this->options)) {
                 throw new Exception\OptionsNotValidException('Required option [' . $required . '] to works ');
             }
         }
