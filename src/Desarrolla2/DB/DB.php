@@ -20,6 +20,48 @@ class DB implements DBInterface
 {
 
     /**
+     * @var \Desarrolla2\DB\Adapter\AdapterInterface
+     */
+    protected $adapter = null;
+
+    /**
+     * @var array
+     */
+    protected $queries = array();
+
+    /**
+     * @var array
+     */
+    protected $options = array();
+
+    /**
+     * @var array
+     */
+    protected $errors = array();
+
+    /**
+     * Control queries
+     */
+    protected function addQueries()
+    {
+        $query = $this->getAdapter()->getLastQuery();
+        if ($query) {
+            array_push($this->queries, $query);
+        }
+    }
+
+    /**
+     * Control Errors
+     */
+    protected function addErrors()
+    {
+        $error = $this->getAdapter()->getLastError();
+        if ($error) {
+            array_push($this->errors, $error);
+        }
+    }
+
+    /**
      * 
      * @param array $options
      */
@@ -36,11 +78,7 @@ class DB implements DBInterface
      */
     public function countErrors()
     {
-        if ($this->errors) {
-            return count($this->errors);
-        } else {
-            return 0;
-        }
+        return count($this->getErrors());
     }
 
     /**
@@ -50,11 +88,7 @@ class DB implements DBInterface
      */
     public function countQueries()
     {
-        if ($this->queries) {
-            return count($this->queries);
-        } else {
-            return 0;
-        }
+        return count($this->getQueries());
     }
 
     /**
@@ -63,7 +97,9 @@ class DB implements DBInterface
      */
     public function dropDatabase($databaseName)
     {
-        return $this->adapter->dropDatabase($databaseName);
+        $this->getAdapter()->dropDatabase($databaseName);
+        $this->addQueries();
+        $this->addErrors();
     }
 
     /**
@@ -74,7 +110,10 @@ class DB implements DBInterface
      */
     public function fetch_arrays($query)
     {
-        return $this->getAdapter()->fetch_arrays($query);
+        $result = $this->getAdapter()->fetch_arrays($query);
+        $this->addQueries();
+        $this->addErrors();
+        return $result;
     }
 
     /**
@@ -85,7 +124,10 @@ class DB implements DBInterface
      */
     public function fetch_object($query)
     {
-        return $this->getAdapter()->fetch_object($query);
+        $result = $this->getAdapter()->fetch_object($query);
+        $this->addQueries();
+        $this->addErrors();
+        return $result;
     }
 
     /**
@@ -115,35 +157,14 @@ class DB implements DBInterface
     }
 
     /**
-     * returns the last error occurred,
-     * removed it from the stack or false if
-     * no errors
-     *
-     * @return string $error or false
-     */
-    public function getError()
-    {
-        $error = array_pop($this->errors);
-        if ($error) {
-            return $error;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * returns the error stack or false if
      * no error
      *
      * @return array $errors or false
      */
-    public function getErrorStack()
+    public function getErrors()
     {
-        if ($this->errors) {
-            return $this->errors;
-        } else {
-            return false;
-        }
+        return $this->errors;
     }
 
     /**
@@ -153,11 +174,7 @@ class DB implements DBInterface
      */
     public function getQueries()
     {
-        if ($this->queries) {
-            return $this->queries;
-        } else {
-            return false;
-        }
+        return $this->queries;
     }
 
     /**
@@ -180,7 +197,19 @@ class DB implements DBInterface
      */
     public function query($query)
     {
-        return $this->adapter->query($query);
+        return $this->getAdapter()->query($query);
+    }
+
+    /**
+     * 
+     * @param string $databaseName
+     */
+    public function selectDatabase($databaseName)
+    {
+        $this->setOption('database', $databaseName);
+        $this->adapter()->connect();
+        $this->addQueries();
+        $this->addErrors();
     }
 
     /**
@@ -198,6 +227,7 @@ class DB implements DBInterface
     public function setOption($key, $value)
     {
         $this->options[$key] = $value;
+        $this->getAdapter()->setOption($key, $value);
     }
 
     /**

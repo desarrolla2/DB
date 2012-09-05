@@ -14,5 +14,27 @@ namespace Desarrolla2\DB;
 
 interface DumperInterface
 {
-    //put your code here
+
+    /**
+     * 
+     * @param string $filename
+     */
+    public function dump($filename);
+
+    /**
+     * 
+     * @param string $filename
+     */
+    public function load($filename);
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function setOption($key, $value);
+
+    /**
+     * @param array $options
+     */
+    public function setOptions($options = array());
 }

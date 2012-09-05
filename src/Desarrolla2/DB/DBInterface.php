@@ -66,21 +66,12 @@ interface DBInterface
     public function fetch_objects($query);
 
     /**
-     * returns the last error occurred,
-     * removed it from the stack or false if
-     * no errors
-     *
-     * @return string $error or false
-     */
-    public function getError();
-
-    /**
      * returns the error stack or false if
      * no error
      *
      * @return array $errors or false
      */
-    public function getErrorStack();
+    public function getErrors();
 
     /**
      * returns query executed in this session or false
@@ -100,7 +91,6 @@ interface DBInterface
     /**
      * 
      * @param type $query
-     * @return type
      */
     public function query($query);
 
