@@ -65,7 +65,7 @@ class MySQL implements AdapterInterface
     {
         $this->con = mysql_connect($this->options['host'], $this->options['username'], $this->options['password']);
         if ($this->con) {
-            $select_db = mysql_select_db($this->options['database']);
+            $select_db = $this->selectaDatabase($this->options['database']);
         }
         if (!$this->con || !$select_db) {
             throw new ConnectionException(mysql_error());
@@ -162,6 +162,25 @@ class MySQL implements AdapterInterface
             return false;
         }
         return $result;
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function setOption($key, $value)
+    {
+        $this->options[$key] = $value;
+    }
+
+    /**
+     * 
+     * @param string $databaseName
+     */
+    public function selectDatabase($databaseName)
+    {
+        $query = 'USE ' . $databaseName . ';';
+        return $this->query($query);
     }
 
 }

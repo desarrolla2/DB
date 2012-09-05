@@ -13,7 +13,7 @@
 namespace Desarrolla2\DB;
 
 use Desarrolla2\DB\DBInterface;
-use Desarrolla2\DB\Exception\AdapterNotSetException;
+use Desarrolla2\DB\Exception;
 use Desarrolla2\DB\Adapter\AdapterInterface;
 
 class DB implements DBInterface
@@ -40,6 +40,13 @@ class DB implements DBInterface
     protected $errors = array();
 
     /**
+     * @var array
+     */
+    protected $validOptions = array(
+        'database', 'username', 'hostname', 'userpass'
+    );
+
+    /**
      * Control queries
      */
     protected function addQueries()
@@ -62,12 +69,26 @@ class DB implements DBInterface
     }
 
     /**
+     * check if all options was set
+     */
+    protected function checkOptions()
+    {
+        foreach ($this->validOptions as $required) {
+            if (!in_array($required, $this->options)) {
+                var_dump($this->options);
+                throw new Exception\OptionsNotValidException('Required option [' . $required . '] to works ');
+            }
+        }
+    }
+
+    /**
      * 
      * @param array $options
      */
-    public function connect($options = array())
+    public function connect(array $options = array())
     {
         $this->setOptions($options);
+        $this->checkOptions();
         $this->adapter->connect();
     }
 
@@ -138,21 +159,24 @@ class DB implements DBInterface
      */
     public function fetch_objects($query)
     {
-        return $this->getAdapter()->fetch_objects($query);
+        $result = $this->getAdapter()->fetch_objects($query);
+        $this->addQueries();
+        $this->addErrors();
+        return $result;
     }
 
     /**
      * retrieve adapter if exist
      * 
      * @return \Desarrolla2\DB\Adapter\AdapterInterface
-     * @throws AdapterNotSetException
+     * @throws Desarrolla2\DB\ExceptionAdapterNotSetException
      */
     protected function getAdapter()
     {
         if ($this->adapter) {
             return $this->adapter;
         } else {
-            throw new AdapterNotSetException();
+            throw new Exception\AdapterNotSetException();
         }
     }
 
@@ -221,11 +245,26 @@ class DB implements DBInterface
     }
 
     /**
+     * 
+     * @param string $option
+     * @return string
+     */
+    protected function sanitizeOption($option)
+    {
+        return trim(strtolower((string) $option));
+    }
+
+    /**
      * @param string $key
      * @param string $value
      */
     public function setOption($key, $value)
     {
+        $value = $this->sanitizeOption($value);
+        $key = $this->sanitizeOption($key);
+        if (!in_array($key, $this->validOptions)) {
+            throw new Exception\OptionNotValidException('Option not valid ' . $key);
+        }
         $this->options[$key] = $value;
         $this->getAdapter()->setOption($key, $value);
     }
@@ -233,7 +272,7 @@ class DB implements DBInterface
     /**
      * @param array $options
      */
-    public function setOptions($options = array())
+    public function setOptions(array $options = array())
     {
         foreach ($options as $key => $value) {
             $this->setOption($key, $value);

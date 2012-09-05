@@ -14,5 +14,10 @@ namespace Desarrolla2\DB\Exception;
 
 class AdapterNotSetException extends \Exception
 {
-    
+
+    public function __construct($message, $code, $previous)
+    {
+        parent::__construct('Adapter not set', $code, $previous);
+    }
+
 }

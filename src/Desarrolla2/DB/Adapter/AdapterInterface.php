@@ -67,4 +67,16 @@ interface AdapterInterface
      * @return type
      */
     public function query($query);
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function setOption($key, $value);
+
+    /**
+     * 
+     * @param string $databaseName
+     */
+    public function selectDatabase($databaseName);
 }

@@ -12,6 +12,8 @@
 
 namespace Desarrolla2\DB;
 
+use Desarrolla2\DB\Adapter\AdapterInterface;
+
 interface DBInterface
 {
 
@@ -19,7 +21,7 @@ interface DBInterface
      * 
      * @param array $options
      */
-    public function connect($options = array());
+    public function connect(array $options = array());
 
     /**
      * returns number errors in this session or 0
@@ -108,5 +110,5 @@ interface DBInterface
     /**
      * @param array $options
      */
-    public function setOptions($options = array());
+    public function setOptions(array $options = array());
 }
