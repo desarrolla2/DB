@@ -17,7 +17,11 @@ class AdapterNotSetException extends \Exception
 
     public function __construct($message, $code, $previous)
     {
-        parent::__construct('Adapter not set', $code, $previous);
+        $_message = 'Adapter not set';
+        if ($message) {
+            $_message .= ' ( ' . $message . ' )';
+        }
+        parent::__construct($_message, $code, $previous);
     }
 
 }
