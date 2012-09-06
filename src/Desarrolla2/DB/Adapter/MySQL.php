@@ -55,7 +55,7 @@ class MySQL implements AdapterInterface
     {
         $this->query = preg_replace('#\/\*[^(*\/)]+\*\/#', ' ', $this->query);
         $this->query = preg_replace('#\s+#', ' ', $this->query);
-        $this->query = trim(mysql_real_escape_string($this->query));
+        $this->query = trim(($this->query)); // mysql_real_escape_string
     }
 
     /**
@@ -89,7 +89,7 @@ class MySQL implements AdapterInterface
         $items = array();
         $result = $this->query($query);
         if ($result) {
-            while ($item = mysql_fetch_array($result, MYSQL_ASSOC)) {
+            while ($item = mysql_fetch_array($result, MYSQL_ASSOC)) {                
                 array_push($items, $item);
             }
             return $items;
