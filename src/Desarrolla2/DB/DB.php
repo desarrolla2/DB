@@ -47,6 +47,13 @@ class DB implements DBInterface
     );
 
     /**
+     * @var array
+     */
+    protected $requiredOptions = array(
+        'database', 'username', 'hostname', 'userpass'
+    );
+
+    /**
      * Control queries
      */
     protected function addQueries()
@@ -73,7 +80,7 @@ class DB implements DBInterface
      */
     protected function checkOptions()
     {
-        foreach ($this->validOptions as $required) {
+        foreach ($this->requiredOptions as $required) {
             if (!array_key_exists($required, $this->options)) {
                 throw new Exception\OptionsNotValidException('Required option [' . $required . '] to works ');
             }
