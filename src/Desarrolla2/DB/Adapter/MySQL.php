@@ -201,8 +201,13 @@ class MySQL implements AdapterInterface
     {
         $this->dropDatabase($this->options['database']);
         $this->createDatabase($this->options['database']);
-        $cmd = 'mysql -u ' . $this->options['username'] . ' -p\'' . $this->options['password'] . '\'' .
-                ' -h ' . $this->options['hostname'] . ' ' . $this->options['database'] .
+        $cmd = 'mysql -u ' . $this->options['username'];
+
+        if ($this->options['password']) {
+            $cmd .= ' -p\'' . $this->options['password'] . '\'';
+        }
+
+        $cmd .= ' -h ' . $this->options['hostname'] . ' ' . $this->options['database'] .
                 ' --verbose --quick < ' . $filename;
         echo $cmd . PHP_EOL;
         return exec($cmd);
@@ -215,8 +220,13 @@ class MySQL implements AdapterInterface
      */
     public function dump($filename)
     {
-        $cmd = 'mysqldump -u ' . $this->options['username'] . ' -p\'' . $this->options['password'] . '\'' .
-                ' -h ' . $this->options['hostname'] . ' ' . $this->options['database'] .
+        $cmd = 'mysqldump -u ' . $this->options['username'];
+        
+        if ($this->options['password']) {
+            $cmd .= ' -p\'' . $this->options['password'] . '\'';
+        }
+
+        $cmd .= ' -h ' . $this->options['hostname'] . ' ' . $this->options['database'] .
                 ' --add-drop-table --add-locks --create-options --disable-keys --extended-insert ' .
                 ' --quick --set-charset --compress --verbose --no-create-db > ' . //--compatible=mysql40
                 $filename;
