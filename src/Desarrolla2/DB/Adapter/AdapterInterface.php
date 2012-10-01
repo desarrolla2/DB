@@ -28,6 +28,12 @@ interface AdapterInterface
     public function dropDatabase($databaseName);
 
     /**
+     * 
+     * @param string $databaseName
+     */
+    public function createDatabase($databaseName);
+
+    /**
      * retrieve results as array from database
      * 
      * @param string $query
@@ -79,4 +85,18 @@ interface AdapterInterface
      * @param string $databaseName
      */
     public function selectDatabase($databaseName);
+
+    /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function load($filename);
+
+    /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function dump($filename);
 }

@@ -285,4 +285,26 @@ class DB implements DBInterface
         }
     }
 
+    /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function load($filename)
+    {
+        echo 'LOADING' . PHP_EOL;
+        return $this->getAdapter()->load($filename);
+    }
+
+    /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function dump($filename)
+    {
+        echo 'DUMPING' . PHP_EOL;
+        return $this->getAdapter()->dump($filename);
+    }
+
 }

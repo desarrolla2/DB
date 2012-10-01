@@ -84,12 +84,21 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
+    public function createDatabase($databaseName)
+    {
+        $query = 'CREATE DATABASE  ' . $databaseName . ';';
+        $this->query($query);
+    }
+
+    /**
+     * {@inheritdoc } 
+     */
     public function fetch_arrays($query)
     {
         $items = array();
         $result = $this->query($query);
         if ($result) {
-            while ($item = mysql_fetch_array($result, MYSQL_ASSOC)) {                
+            while ($item = mysql_fetch_array($result, MYSQL_ASSOC)) {
                 array_push($items, $item);
             }
             return $items;
@@ -181,6 +190,38 @@ class MySQL implements AdapterInterface
     {
         $query = 'USE ' . $databaseName . ';';
         return $this->query($query);
+    }
+
+    /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function load($filename)
+    {
+        $this->dropDatabase();
+        $this->createDatabase();
+        $cmd = 'mysql -u ' . $this->options['username'] . ' -p\'' . $this->options['password'] . '\'' .
+                ' -h ' . $this->options['host'] . ' ' . $this->options['database'] .
+                ' --verbose --quick < ' . $file_name;
+        echo $cmd . PHP_EOL;
+        return exec($cmd);
+    }
+
+    /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function dump($filename)
+    {
+        $cmd = 'mysqldump -u ' . $this->options['username'] . ' -p\'' . $this->options['password'] . '\'' .
+                ' -h ' . $this->options['host'] . ' ' . $this->options['database'] .
+                ' --add-drop-table --add-locks --create-options --disable-keys --extended-insert ' .
+                ' --quick --set-charset --compress --verbose --no-create-db > ' . //--compatible=mysql40
+                $file_name;
+        echo $cmd . PHP_EOL;
+        return exec($cmd);
     }
 
 }

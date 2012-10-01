@@ -111,4 +111,18 @@ interface DBInterface
      * @param array $options
      */
     public function setOptions(array $options = array());
+    
+        /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function load($filename);
+
+    /**
+     * 
+     * @param type $filename
+     * @return type
+     */
+    public function dump($filename);
 }
