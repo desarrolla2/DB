@@ -199,8 +199,8 @@ class MySQL implements AdapterInterface
      */
     public function load($filename)
     {
-        $this->dropDatabase();
-        $this->createDatabase();
+        $this->dropDatabase($this->options['database']);
+        $this->createDatabase($this->options['database']);
         $cmd = 'mysql -u ' . $this->options['username'] . ' -p\'' . $this->options['password'] . '\'' .
                 ' -h ' . $this->options['hostname'] . ' ' . $this->options['database'] .
                 ' --verbose --quick < ' . $filename;
