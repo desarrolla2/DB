@@ -43,14 +43,14 @@ class DB implements DBInterface
      * @var array
      */
     protected $validOptions = array(
-        'database', 'username', 'hostname', 'userpass'
+        'database', 'username', 'hostname', 'password'
     );
 
     /**
      * @var array
      */
     protected $requiredOptions = array(
-        'database', 'username', 'hostname', 'userpass'
+        'database', 'username', 'hostname', 'password'
     );
 
     /**
