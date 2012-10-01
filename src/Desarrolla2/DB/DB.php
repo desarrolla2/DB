@@ -261,12 +261,22 @@ class DB implements DBInterface
     }
 
     /**
+     * 
+     * @param string $option
+     * @return string
+     */
+    protected function sanitizeValue($value)
+    {
+        return trim((string) $value);
+    }
+
+    /**
      * @param string $key
      * @param string $value
      */
     public function setOption($key, $value)
     {
-        $value = $this->sanitizeOption($value);
+        $value = $this->sanitizeValue($value);
         $key = $this->sanitizeOption($key);
         if (!in_array($key, $this->validOptions)) {
             throw new Exception\OptionNotValidException('Option not valid ' . $key);
