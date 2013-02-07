@@ -19,7 +19,7 @@ $db->setAdaper(new MySQL);
 
 $db->setOptions(array(
     'database' => '', 'username' => '',
-    'hostname' => '', 'userpass' => ''
+    'hostname' => '', 'password' => ''
 ));
 
 $db->connect();
