@@ -12,8 +12,7 @@
 
 namespace Desarrolla2\DB\Adapter;
 
-interface AdapterInterface
-{
+interface AdapterInterface {
 
     /**
      * 
@@ -99,8 +98,6 @@ interface AdapterInterface
      * @return type
      */
     public function dump($filename);
-    
-    
-    public function getLastId();
 
+    public function getLastId();
 }
