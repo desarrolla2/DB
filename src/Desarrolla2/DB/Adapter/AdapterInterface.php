@@ -99,4 +99,8 @@ interface AdapterInterface
      * @return type
      */
     public function dump($filename);
+    
+    
+    public function getLastId();
+
 }

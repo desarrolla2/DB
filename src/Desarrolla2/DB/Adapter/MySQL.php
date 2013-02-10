@@ -15,8 +15,7 @@ namespace Desarrolla2\DB\Adapter;
 use Desarrolla2\DB\Adapter\AdapterInterface;
 use Desarrolla2\DB\Exception\ConnectionException;
 
-class MySQL implements AdapterInterface
-{
+class MySQL implements AdapterInterface {
 
     /**
      * @var array
@@ -41,8 +40,7 @@ class MySQL implements AdapterInterface
     /**
      * Destructor
      */
-    public function __destruct()
-    {
+    public function __destruct() {
         if ($this->con) {
             mysql_close($this->con);
         }
@@ -51,8 +49,7 @@ class MySQL implements AdapterInterface
     /**
      * Clean Query to safe and optimal execution
      */
-    protected function cleanQuery()
-    {
+    protected function cleanQuery() {
         $this->query = preg_replace('#\/\*[^(*\/)]+\*\/#', ' ', $this->query);
         $this->query = preg_replace('#\s+#', ' ', $this->query);
         $this->query = trim(($this->query)); // mysql_real_escape_string
@@ -61,8 +58,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function connect()
-    {
+    public function connect() {
         $this->con = mysql_connect($this->options['hostname'], $this->options['username'], $this->options['password']);
         if ($this->con) {
             $select_db = $this->selectDatabase($this->options['database']);
@@ -75,8 +71,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function dropDatabase($databaseName)
-    {
+    public function dropDatabase($databaseName) {
         $query = 'DROP DATABASE IF EXISTS ' . $databaseName . ';';
         $this->query($query);
     }
@@ -84,8 +79,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function createDatabase($databaseName)
-    {
+    public function createDatabase($databaseName) {
         $query = 'CREATE DATABASE  ' . $databaseName . ';';
         $this->query($query);
     }
@@ -93,8 +87,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function fetch_arrays($query)
-    {
+    public function fetch_arrays($query) {
         $items = array();
         $result = $this->query($query);
         if ($result) {
@@ -110,8 +103,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function fetch_object($query)
-    {
+    public function fetch_object($query) {
         $result = $this->query($query);
         if ($result) {
             return mysql_fetch_object($result);
@@ -123,8 +115,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function fetch_objects($query)
-    {
+    public function fetch_objects($query) {
         $items = array();
         $result = $this->query($query);
         if ($result) {
@@ -140,8 +131,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function getLastError()
-    {
+    public function getLastError() {
         $error = $this->error;
         $this->error = null;
         return $error;
@@ -150,8 +140,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc } 
      */
-    public function getLastQuery()
-    {
+    public function getLastQuery() {
         $query = $this->query;
         $this->query = null;
         return $query;
@@ -160,8 +149,7 @@ class MySQL implements AdapterInterface
     /**
      * {@inheritdoc }
      */
-    public function query($query)
-    {
+    public function query($query) {
         $this->query = $query;
         $this->cleanQuery();
         $result = mysql_query($this->query);
@@ -177,8 +165,7 @@ class MySQL implements AdapterInterface
      * @param string $key
      * @param string $value
      */
-    public function setOption($key, $value)
-    {
+    public function setOption($key, $value) {
         $this->options[$key] = $value;
     }
 
@@ -186,8 +173,7 @@ class MySQL implements AdapterInterface
      * 
      * @param string $databaseName
      */
-    public function selectDatabase($databaseName)
-    {
+    public function selectDatabase($databaseName) {
         $query = 'USE ' . $databaseName . ';';
         return $this->query($query);
     }
@@ -197,8 +183,7 @@ class MySQL implements AdapterInterface
      * @param type $filename
      * @return type
      */
-    public function load($filename)
-    {
+    public function load($filename) {
         $this->dropDatabase($this->options['database']);
         $this->createDatabase($this->options['database']);
         $cmd = 'mysql -u ' . $this->options['username'];
@@ -218,10 +203,9 @@ class MySQL implements AdapterInterface
      * @param type $filename
      * @return type
      */
-    public function dump($filename)
-    {
+    public function dump($filename) {
         $cmd = 'mysqldump -u ' . $this->options['username'];
-        
+
         if ($this->options['password']) {
             $cmd .= ' -p\'' . $this->options['password'] . '\'';
         }
@@ -232,6 +216,10 @@ class MySQL implements AdapterInterface
                 $filename;
         echo $cmd . PHP_EOL;
         return exec($cmd);
+    }
+
+    public function getLastId() {
+        return mysql_insert_id();
     }
 
 }

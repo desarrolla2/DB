@@ -16,8 +16,7 @@ use Desarrolla2\DB\DBInterface;
 use Desarrolla2\DB\Exception;
 use Desarrolla2\DB\Adapter\AdapterInterface;
 
-class DB implements DBInterface
-{
+class DB implements DBInterface {
 
     /**
      * @var \Desarrolla2\DB\Adapter\AdapterInterface
@@ -56,8 +55,7 @@ class DB implements DBInterface
     /**
      * Control queries
      */
-    protected function addQueries()
-    {
+    protected function addQueries() {
         $query = $this->getAdapter()->getLastQuery();
         if ($query) {
             array_push($this->queries, $query);
@@ -67,8 +65,7 @@ class DB implements DBInterface
     /**
      * Control Errors
      */
-    protected function addErrors()
-    {
+    protected function addErrors() {
         $error = $this->getAdapter()->getLastError();
         if ($error) {
             array_push($this->errors, $error);
@@ -78,8 +75,7 @@ class DB implements DBInterface
     /**
      * check if all options was set
      */
-    protected function checkOptions()
-    {
+    protected function checkOptions() {
         foreach ($this->requiredOptions as $required) {
             if (!array_key_exists($required, $this->options)) {
                 throw new Exception\OptionsNotValidException('Required option [' . $required . '] to works ');
@@ -91,8 +87,7 @@ class DB implements DBInterface
      * 
      * @param array $options
      */
-    public function connect(array $options = array())
-    {
+    public function connect(array $options = array()) {
         $this->setOptions($options);
         $this->checkOptions();
         $this->adapter->connect();
@@ -103,8 +98,7 @@ class DB implements DBInterface
      *
      * @return int $n
      */
-    public function countErrors()
-    {
+    public function countErrors() {
         return count($this->getErrors());
     }
 
@@ -113,8 +107,7 @@ class DB implements DBInterface
      *
      * @return int $n
      */
-    public function countQueries()
-    {
+    public function countQueries() {
         return count($this->getQueries());
     }
 
@@ -122,8 +115,7 @@ class DB implements DBInterface
      * 
      * @param string $databaseName
      */
-    public function dropDatabase($databaseName)
-    {
+    public function dropDatabase($databaseName) {
         $this->getAdapter()->dropDatabase($databaseName);
         $this->addQueries();
         $this->addErrors();
@@ -135,8 +127,7 @@ class DB implements DBInterface
      * @param string $query
      * @return array
      */
-    public function fetch_arrays($query)
-    {
+    public function fetch_arrays($query) {
         $result = $this->getAdapter()->fetch_arrays($query);
         $this->addQueries();
         $this->addErrors();
@@ -149,8 +140,7 @@ class DB implements DBInterface
      * @param string $query
      * @return object
      */
-    public function fetch_object($query)
-    {
+    public function fetch_object($query) {
         $result = $this->getAdapter()->fetch_object($query);
         $this->addQueries();
         $this->addErrors();
@@ -163,8 +153,7 @@ class DB implements DBInterface
      * @param string $query
      * @return Collection
      */
-    public function fetch_objects($query)
-    {
+    public function fetch_objects($query) {
         $result = $this->getAdapter()->fetch_objects($query);
         $this->addQueries();
         $this->addErrors();
@@ -177,8 +166,7 @@ class DB implements DBInterface
      * @return \Desarrolla2\DB\Adapter\AdapterInterface
      * @throws Desarrolla2\DB\ExceptionAdapterNotSetException
      */
-    protected function getAdapter()
-    {
+    protected function getAdapter() {
         if ($this->adapter) {
             return $this->adapter;
         } else {
@@ -192,8 +180,7 @@ class DB implements DBInterface
      *
      * @return array $errors or false
      */
-    public function getErrors()
-    {
+    public function getErrors() {
         return $this->errors;
     }
 
@@ -202,8 +189,7 @@ class DB implements DBInterface
      *
      * @return array $queries or false
      */
-    public function getQueries()
-    {
+    public function getQueries() {
         return $this->queries;
     }
 
@@ -213,8 +199,7 @@ class DB implements DBInterface
      * @param string $key
      * @return array | null
      */
-    public function getOption($key)
-    {
+    public function getOption($key) {
         if (isset($this->options[$key])) {
             return $this->options[$key];
         }
@@ -225,8 +210,7 @@ class DB implements DBInterface
      * @param type $query
      * @return type
      */
-    public function query($query)
-    {
+    public function query($query) {
         return $this->getAdapter()->query($query);
     }
 
@@ -234,8 +218,7 @@ class DB implements DBInterface
      * 
      * @param string $databaseName
      */
-    public function selectDatabase($databaseName)
-    {
+    public function selectDatabase($databaseName) {
         $this->setOption('database', $databaseName);
         $this->adapter()->connect();
         $this->addQueries();
@@ -245,8 +228,7 @@ class DB implements DBInterface
     /**
      * @param \Desarrolla2\DB\Adapter\AdapterInterface $adapter
      */
-    public function setAdaper(AdapterInterface $adapter)
-    {
+    public function setAdaper(AdapterInterface $adapter) {
         $this->adapter = $adapter;
     }
 
@@ -255,8 +237,7 @@ class DB implements DBInterface
      * @param string $option
      * @return string
      */
-    protected function sanitizeOption($option)
-    {
+    protected function sanitizeOption($option) {
         return trim(strtolower((string) $option));
     }
 
@@ -265,8 +246,7 @@ class DB implements DBInterface
      * @param string $option
      * @return string
      */
-    protected function sanitizeValue($value)
-    {
+    protected function sanitizeValue($value) {
         return trim((string) $value);
     }
 
@@ -274,8 +254,7 @@ class DB implements DBInterface
      * @param string $key
      * @param string $value
      */
-    public function setOption($key, $value)
-    {
+    public function setOption($key, $value) {
         $value = $this->sanitizeValue($value);
         $key = $this->sanitizeOption($key);
         if (!in_array($key, $this->validOptions)) {
@@ -288,8 +267,7 @@ class DB implements DBInterface
     /**
      * @param array $options
      */
-    public function setOptions(array $options = array())
-    {
+    public function setOptions(array $options = array()) {
         foreach ($options as $key => $value) {
             $this->setOption($key, $value);
         }
@@ -300,8 +278,7 @@ class DB implements DBInterface
      * @param type $filename
      * @return type
      */
-    public function load($filename)
-    {
+    public function load($filename) {
         echo 'LOADING' . PHP_EOL;
         return $this->getAdapter()->load($filename);
     }
@@ -311,10 +288,13 @@ class DB implements DBInterface
      * @param type $filename
      * @return type
      */
-    public function dump($filename)
-    {
+    public function dump($filename) {
         echo 'DUMPING' . PHP_EOL;
         return $this->getAdapter()->dump($filename);
+    }
+
+    public function getLastId() {
+        return $this->getAdapter()->getLastId();
     }
 
 }
