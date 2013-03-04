@@ -220,7 +220,7 @@ class DB implements DBInterface {
      */
     public function selectDatabase($databaseName) {
         $this->setOption('database', $databaseName);
-        $this->adapter()->connect();
+        $this->getAdapter()->connect();
         $this->addQueries();
         $this->addErrors();
     }
